@@ -20,6 +20,9 @@ bibliography: references.bib
 
 library(tidyverse)
 library(palmerpenguins)
+library(here)
+
+cleaned_data <- read_csv(here::here("data/cleaned_data.csv"))
 ```
 
 
@@ -72,8 +75,40 @@ analysis_data |>
 
 Talk way more about it. 
 
+```{r}
+# Aggregate data to get the total number of deaths for each year and age group
+total_deaths <- cleaned_data %>%
+  group_by(Year_of_death, Age_group) %>%
+  summarise(Total_Deaths = sum(Count),.groups = "drop")
+
+# Create a bar graph for the total number of deaths
+ggplot(total_deaths, aes(x = factor(Year_of_death), y = Total_Deaths, fill = Age_group)) +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(x = "Year of Death",
+       y = "Total Number of Deaths") +
+  scale_fill_manual(values = c("#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3")) +
+  theme_minimal()
 
 
+```
+
+
+```{r}
+# Aggregate data to get the total number of deaths for each year and gender
+total_deaths_gender <- cleaned_data %>%
+  group_by(Year_of_death, Gender) %>%
+  summarise(Total_Deaths = sum(Count), .groups = "drop")
+
+# Create a grouped bar graph for male and female
+ggplot(total_deaths_gender, aes(x = factor(Year_of_death), y = Total_Deaths, fill = Gender)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "Year of Death",
+       y = "Total Number of Deaths") +
+  scale_fill_manual(values = c("#66c2a5", "#fc8d62")) +
+  theme_minimal()
+
+
+```
 # Model
 
 The goal of our modelling strategy is twofold. Firstly,...
