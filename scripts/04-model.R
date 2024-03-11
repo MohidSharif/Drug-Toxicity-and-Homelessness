@@ -54,6 +54,18 @@ third_model <-
   )
 prior_summary(third_model)
 
+fourth_model <-
+  stan_glm(
+    formula = counts ~ years,
+    data = analysis_data,
+    family = gaussian(),
+    prior = normal(location = 0, scale = 25, autoscale = TRUE),
+    prior_intercept = normal(location = 0, scale = 3, autoscale = TRUE),
+    prior_aux = exponential(rate = 1, autoscale = TRUE),
+    seed = 93
+  )
+prior_summary(fourth_model)
+
 #### Save model ####
 saveRDS(
   first_model,
@@ -68,4 +80,9 @@ saveRDS(
 saveRDS(
   third_model,
   file = "models/third_model.rds"
+)
+
+saveRDS(
+  fourth_model,
+  file = "models/fourth_model.rds"
 )
