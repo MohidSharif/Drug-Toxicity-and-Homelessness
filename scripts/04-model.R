@@ -12,21 +12,46 @@
 library(tidyverse)
 library(rstanarm)
 
+
 #### Read data ####
-analysis_data <- read_csv("data/analysis_data/analysis_data.csv")
+analysis_data <- read_csv("data/analysis_data/cleaned_data.csv")
 
 ### Model data ####
 first_model <-
   stan_glm(
-    formula = flying_time ~ length + width,
+    formula = counts ~ age_groups,
     data = analysis_data,
     family = gaussian(),
-    prior = normal(location = 0, scale = 2.5, autoscale = TRUE),
-    prior_intercept = normal(location = 0, scale = 2.5, autoscale = TRUE),
-    prior_aux = exponential(rate = 1, autoscale = TRUE),
-    seed = 853
+    prior = normal(location = 0, scale = 23, autoscale = TRUE),
+    prior_intercept = normal(location = 0, scale = 1, autoscale = TRUE),
+    prior_aux = exponential(rate = 0.33, autoscale = TRUE),
+    seed = 93
   )
 
+
+second_model <- 
+  stan_glm(
+  formula = counts ~ genders,
+  data = analysis_data,
+  family = gaussian(),
+  prior = normal(location = 0, scale = 2.5, autoscale = TRUE),
+  prior_intercept = normal(location = 0, scale = 2.5, autoscale = TRUE),
+  prior_aux = exponential(rate = 1, autoscale = TRUE),
+  seed = 93
+)
+
+prior_summary(second_model)
+
+third_model <-
+  stan_glm(
+    formula = counts ~ genders + age_groups,
+    data = analysis_data,
+    family = gaussian(),
+    prior = normal(location = 0, scale = 23, autoscale = TRUE),
+    prior_intercept = normal(location = 0, scale = 1, autoscale = TRUE),
+    prior_aux = exponential(rate = 0.33, autoscale = TRUE),
+    seed = 93
+  )
 
 #### Save model ####
 saveRDS(
@@ -34,4 +59,12 @@ saveRDS(
   file = "models/first_model.rds"
 )
 
+saveRDS(
+  second_model,
+  file = "models/second_model.rds"
+)
 
+saveRDS(
+  third_model,
+  file = "models/third_model.rds"
+)
