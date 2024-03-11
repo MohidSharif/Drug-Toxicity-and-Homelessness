@@ -27,7 +27,7 @@ first_model <-
     prior_aux = exponential(rate = 0.33, autoscale = TRUE),
     seed = 93
   )
-
+prior_summary(first_model)
 
 second_model <- 
   stan_glm(
@@ -52,6 +52,7 @@ third_model <-
     prior_aux = exponential(rate = 0.33, autoscale = TRUE),
     seed = 93
   )
+prior_summary(third_model)
 
 #### Save model ####
 saveRDS(
