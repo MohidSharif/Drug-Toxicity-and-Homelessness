@@ -152,6 +152,13 @@ library(rstanarm)
 
 first_model <-
   readRDS(file = here::here("models/first_model.rds"))
+
+second_model <-
+  readRDS(file = here::here("models/second_model.rds"))
+
+third_model <-
+  readRDS(file = here::here("models/third_model.rds"))
+
 ```
 
 ```{r}
@@ -163,7 +170,9 @@ first_model <-
 
 modelsummary::modelsummary(
   list(
-    "First model" = first_model
+    "Gender Only" = second_model,
+    "Age Only" = first_model,
+    "Age and Gender" = third_model
   ),
   statistic = "mad",
   fmt = 2
