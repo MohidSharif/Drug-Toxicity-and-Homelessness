@@ -1,16 +1,19 @@
 ---
-title: "My title"
-subtitle: "My subtitle if needed"
+title: "Homelessness and Drug Toxicity"
 author: 
-  - First author
-  - Another author
-thanks: "Code and data are available at: LINK."
+  - Gavin Crook
+  - Samarth Rajani
+  - Mohid Sharif
+thanks: "Code and data are available at: https://github.com/MohidSharif/Drug-Toxicity-and-Homelessness.."
 date: today
 date-format: long
 abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
 format: pdf
 number-sections: true
 bibliography: references.bib
+header-includes:
+ \usepackage{float}
+ \floatplacement{figure}{H}
 ---
 
 ```{r}
@@ -21,8 +24,14 @@ bibliography: references.bib
 library(tidyverse)
 library(palmerpenguins)
 library(here)
+# Turn off echo for all code, disables knitting code chunks
+knitr::opts_chunk$set(echo = TRUE)
+# Turn off warning messaging in knitted paper file
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+# Import needed libraries
+library(kableExtra)
 
-cleaned_data <- read_csv(here::here("data/cleaned_data.csv"))
+cleaned_data <- read_csv(here::here("data/analysis_data/cleaned_data.csv"))
 ```
 
 
@@ -36,46 +45,75 @@ The remainder of this paper is structured as follows. @sec-data....
 
 # Data {#sec-data}
 
-Some of our data is of penguins (@fig-bills), from @palmerpenguins.
+We obtained our data from the City of Toronto **opendatatoronto** database portal, using the 'opendatatoronto' package [@citeopendatatoronto] and the statistical programming language **R** [@citeR]. I used the **tidyverse** package for data manipulation [@citetidyverse] and **kableExtra** for table formatting [@citekableExtra]. The header includes two lines of code **"usepackage{float}"** which allows the use of float in R markdown and the line **"floatplacement{figure}{H}"** [@citeholdposition] which keeps the tables and figures locked in the specific place where they are written in R markdown.
+
+This data set records reports of homeless deaths across Toronto and records the details of the deceased. The data records the **year of death, cause of death, age group, gender, and number of deaths** for every report. The data classifies cases by age group rather than specific ages, age groups are grouped by 20 year age gaps (E.g. "20 to 39 Years") except for the first group which is **"<20"** and the last group which is **"60+"**. Gender is identified and reported as **"Male"** or **"Female"**. Year of death is simply as the year the deaths were reported, starting from **2017** up until **2023**. Cause of deaths are classified as follows: **"Accident", "Cancer", "Cardiovascular Disease", "Covid-19", "Drug Toxicity", "Homicide", "Pneumonia", "Other", "Suicide", and "Unknown/Pending"**. And the number of deaths is simply the number of deaths provided in that report.
+
+Since we are only interested in deaths due to drug toxicity, we simplified the data and created two datasets. First the data was cleaned to remove any **"Unknown"** or **empty** values. Then causes of death due to **Drug Toxicity** were isolated and all others were removed from the dataset. We then created two datasets, one highlighting the number deaths per year for each gender and one for the number of deaths per year for each age group. Since case in the data set reported multiple deaths, therefore all counts from each report had to be added to their respective grouping to create a new death count variable for the two datasets. Using these new datasets we can now compare and analyze the death trend oover the years for each gender and age group.
+
+@tbl-sample1 shows the data associated with cases reported as "death due to drug toxicity".This data shows us year, age group, gender and count of each reported case of drug toxicity.
 
 ```{r}
-#| label: fig-bills
-#| fig-cap: Bills of penguins
+#| label: tbl-sample1
+#| tbl-cap: Age Group Deaths Due to Drug Toxicity
 #| echo: false
 
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = "none") +
-  theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
+# Import knitr
+library(knitr)
+
+# Read the data into a variable
+age_group_data <- read_csv(here::here("data/analysis_data/age_group_deaths_data.csv"))
+gender_data <- read_csv(here::here("data/analysis_data/gender_deaths_data.csv"))
+
+# Filter the data to be specific to data relating to drug txocity causes of death
+age_group_data |> 
+  select(Year, Age_group, Deaths) |>
+# Include 10 listings in the table
+  slice(1:8) |> 
+# Display the table with appropriate column names and format properties
+  kable(
+    col.names = c("Year", "Age Group", "Deaths"),
+    digits = 1,
+    booktabs = TRUE,
+    linesep = "") |> 
+    kable_styling(latex_options = "HOLD_position")
+
+```
+
+@tbl-sample2 shows the data associated with cases reported as "death due to drug toxicity".This data shows us year, age group, gender and count of each reported case of drug toxicity.
+
+```{r}
+#| label: tbl-sample2
+#| tbl-cap: Gender Deaths Due to Drug Toxicity
+#| echo: false
+
+# Filter the data to be specific to data relating to drug txocity causes of death
+gender_data |> 
+  select(Year, Gender, Deaths) |>
+# Include 10 listings in the table
+  slice(1:8) |> 
+# Display the table with appropriate column names and format properties
+  kable(
+    col.names = c("Year", "Gender", "Deaths"),
+    digits = 1,
+    booktabs = TRUE,
+    linesep = "") |> 
+    kable_styling(latex_options = "HOLD_position")
+
 ```
 
 Talk more about it.
 
-And also planes (@fig-planes). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work well once you have enough text.)
-
-```{r}
-#| label: fig-planes
-#| fig-cap: Relationship between wing length and width
-#| echo: false
-#| warning: false
-#| message: false
-
-analysis_data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
-
-analysis_data |> 
-  ggplot(aes(x = width, y = length)) +
-  geom_point(alpha = 0.8) +
-  theme_minimal() +
-  labs(x = "Wing width (mm)",
-       y = "Wing length (mm)")
-```
 
 Talk way more about it. 
 
 ```{r}
+#| label: figure1
+#| fig-cap: Deaths Per Year for Age Group
+#| echo: false
+#| warning: false
+#| message: false
+
 # Aggregate data to get the total number of deaths for each year and age group
 total_deaths <- cleaned_data %>%
   group_by(Year_of_death, Age_group) %>%
@@ -94,6 +132,11 @@ ggplot(total_deaths, aes(x = factor(Year_of_death), y = Total_Deaths, fill = Age
 
 
 ```{r}
+#| label: figure2
+#| fig-cap: Deaths Per Year per Gender
+#| echo: false
+#| warning: false
+#| message: false
 # Aggregate data to get the total number of deaths for each year and gender
 total_deaths_gender <- cleaned_data %>%
   group_by(Year_of_death, Gender) %>%
@@ -209,9 +252,7 @@ Weaknesses and next steps should also be included.
 
 ## Posterior predictive check
 
-In @fig-ppcheckandposteriorvsprior-1 we implement a posterior predictive check. This shows...
-
-In @fig-ppcheckandposteriorvsprior-2 we compare the posterior with the prior. This shows... 
+In @fig-ppcheckandposteriorvsprior we implement a posterior predictive check. This shows...
 
 ```{r}
 #| eval: true
@@ -227,18 +268,17 @@ pp_check(first_model) +
   theme_classic() +
   theme(legend.position = "bottom")
 
-posterior_vs_prior(first_model) +
-  theme_minimal() +
-  scale_color_brewer(palette = "Set1") +
-  theme(legend.position = "bottom") +
-  coord_flip()
+#posterior_vs_prior(first_model) +
+#  theme_minimal() +
+#  scale_color_brewer(palette = "Set1") +
+#  theme(legend.position = "bottom") +
+#  coord_flip()
 ```
 
 ## Diagnostics
 
-@fig-stanareyouokay-1 is a trace plot. It shows... This suggests...
+@fig-stanareyouokay is a trace and rhat plot. It shows... This suggests...
 
-@fig-stanareyouokay-2 is a Rhat plot. It shows... This suggests...
 
 ```{r}
 #| echo: false
