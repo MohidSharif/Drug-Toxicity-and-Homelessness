@@ -19,6 +19,7 @@ library(rstanarm)
 analysis_data <- read_csv("data/analysis_data/cleaned_data.csv")
 
 ### Model data ####
+# Poisson Model just age 
 first_model <-
   stan_glm(
     formula = Count ~ Age_group,
@@ -32,6 +33,7 @@ first_model <-
 
 prior_summary(first_model)
 
+# Poisson Model just Gender
 second_model <- 
   stan_glm(
   formula = Count ~ Gender,
@@ -44,7 +46,7 @@ second_model <-
 )
 
 prior_summary(second_model)
-
+# Poisson Model Gender and age
 third_model <-
   stan_glm(
     formula = Count ~ Gender + Age_group,
@@ -57,17 +59,42 @@ third_model <-
   )
 prior_summary(third_model)
 
+# Negative Binomial Model just age
 fourth_model <-
   stan_glm(
-    formula = Count ~ Year_of_death,
+    formula = Count ~ Age_group,
     data = analysis_data,
-    family = poisson (link = "log"),
-    prior = normal(location = 0, scale = 25, autoscale = TRUE),
-    prior_intercept = normal(location = 0, scale = 3, autoscale = TRUE),
+    family = neg_binomial_2(link = "log"),
+    prior = normal(location = 0, scale = 23, autoscale = TRUE),
+    prior_intercept = normal(location = 0, scale = 1, autoscale = TRUE),
+    prior_aux = exponential(rate = 0.33, autoscale = TRUE),
+    seed = 93
+  )
+
+
+# Negative Binomial Model just Gender
+fifth_model <- 
+  stan_glm(
+    formula = Count ~ Gender,
+    data = analysis_data,
+    family = neg_binomial_2(link = "log"),
+    prior = normal(location = 0, scale = 2.5, autoscale = TRUE),
+    prior_intercept = normal(location = 0, scale = 2.5, autoscale = TRUE),
     prior_aux = exponential(rate = 1, autoscale = TRUE),
     seed = 93
   )
-prior_summary(fourth_model)
+
+# Negative Binomial Model Gender and age
+sixth_model <-
+  stan_glm(
+    formula = Count ~ Gender + Age_group,
+    data = analysis_data,
+    family = neg_binomial_2(link = "log"),
+    prior = normal(location = 0, scale = 23, autoscale = TRUE),
+    prior_intercept = normal(location = 0, scale = 1, autoscale = TRUE),
+    prior_aux = exponential(rate = 0.33, autoscale = TRUE),
+    seed = 93
+  )
 
 #### Save model ####
 saveRDS(
@@ -89,3 +116,14 @@ saveRDS(
   fourth_model,
   file = "models/fourth_model.rds"
 )
+
+saveRDS(
+  fifth_model,
+  file = "models/fifth_model.rds"
+)
+
+saveRDS(
+  sixth_model,
+  file = "models/sixth_model.rds"
+)
+
