@@ -154,13 +154,14 @@ ggplot(total_deaths_gender, aes(x = factor(Year_of_death), y = Total_Deaths, fil
 ```
 # Model
 
-The goal of our modelling strategy is twofold. Firstly,...
+The goal of our modelling strategy is twofold. Firstly, use a poisson distribution and a negative binomial distribution as we have count data.Both distribution can be use on count data, and by using both we are able to compare results. Secondly, use a multilevel or Bayesian model.
 
+I DO NOTKNOW WHAT TO PUT HERE
 Here we briefly describe the Bayesian analysis model used to investigate... Background details and diagnostics are included in [Appendix -@sec-model-details].
 
 ## Model set-up
 
-Define $count_i$ as the count of deaths that resulted from drug toxicity in Toronto. Then $\beta_i$ is the wing width and $\gamma_i$ is the wing length, both measured in millimeters.  
+Define $count_i$ as the count of deaths that resulted from drug toxicity in Toronto. Then $\Gender_i$ is the gender for that count of deaths and $\Age\_group_i$ is the range of ages for the deaths.
 
 \begin{align}
 \text{Count}_i | \mu_i, \sigma &\sim \text{Normal}(\mu_i, \sigma) \\
@@ -175,12 +176,9 @@ We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use
 
 
 ### Model justification
+We expect a their to be a larger relationship between males and the number of deaths. This is because there are more males within the homeless population and more males homeless as a result of addiction to drugs. These reason make it clear that that the male relationship is larger than the female. 
 
-Count Data -> Poisson 
-
-We expect a positive relationship between the size of the wings and time spent aloft. In particular...
-
-We can use maths by including latex between dollar signs, for instance $\theta$.
+Secondly, we expect the relationship to be larger between younger individuals and the number of deaths. We expect this result as the older individuals who die when homeless, will die of illness like Covid-19 or cancer. This limits the number of deaths occurring as a result of drugs. This may result in a negative relationship for the older age groups and a positive relationship for the younger age groups.
 
 
 # Results
@@ -204,6 +202,14 @@ second_model <-
 third_model <-
   readRDS(file = here::here("models/third_model.rds"))
 
+fourth_model <-
+  readRDS(file = here::here("models/fourth_model.rds"))
+
+fifth_model <-
+  readRDS(file = here::here("models/fifth_model.rds"))
+
+sixth_model <-
+  readRDS(file = here::here("models/sixth_model.rds"))
 ```
 
 ```{r}
@@ -224,8 +230,24 @@ modelsummary::modelsummary(
 )
 ```
 
+```{r}
+#| echo: false
+#| eval: true
+#| label: tbl-modelresults2
+#| tbl-cap: "Explanatory models of flight time based on wing width and wing length"
+#| warning: false
 
 
+modelsummary::modelsummary(
+  list(
+    "Gender Only" = fifth_model,
+    "Age Only" = fourth_model,
+    "Age and Gender" = sixth_model
+  ),
+  statistic = "mad",
+  fmt = 2
+)
+```
 
 # Discussion
 
