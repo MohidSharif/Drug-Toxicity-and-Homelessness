@@ -1,11 +1,13 @@
 #### Preamble ####
-# Purpose: Models... [...UPDATE THIS...]
-# Author: Rohan Alexander [...UPDATE THIS...]
-# Date: 11 February 2023 [...UPDATE THIS...]
-# Contact: rohan.alexander@utoronto.ca [...UPDATE THIS...]
+# Purpose: Models the relationship between the number of deaths, age group and gender 
+# Author 1: Mohid Sharif
+# Author 2: Gavin Crooks
+# Author 3: Samarth
+# Date: 12 Marth 2024
+# Contact: mohid.sharif@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: [...UPDATE THIS...]
-# Any other information needed? [...UPDATE THIS...]
+# Pre-requisites: 00-simulate_data.R or 01-download_data.R and 02-data_cleaning.R
+
 
 
 #### Workspace setup ####
@@ -19,21 +21,22 @@ analysis_data <- read_csv("data/analysis_data/cleaned_data.csv")
 ### Model data ####
 first_model <-
   stan_glm(
-    formula = counts ~ age_groups,
+    formula = Count ~ Age_group,
     data = analysis_data,
-    family = gaussian(),
+    family = poisson (link = "log"),
     prior = normal(location = 0, scale = 23, autoscale = TRUE),
     prior_intercept = normal(location = 0, scale = 1, autoscale = TRUE),
     prior_aux = exponential(rate = 0.33, autoscale = TRUE),
     seed = 93
   )
+
 prior_summary(first_model)
 
 second_model <- 
   stan_glm(
-  formula = counts ~ genders,
+  formula = Count ~ Gender,
   data = analysis_data,
-  family = gaussian(),
+  family = poisson(link = "log"),
   prior = normal(location = 0, scale = 2.5, autoscale = TRUE),
   prior_intercept = normal(location = 0, scale = 2.5, autoscale = TRUE),
   prior_aux = exponential(rate = 1, autoscale = TRUE),
@@ -44,9 +47,9 @@ prior_summary(second_model)
 
 third_model <-
   stan_glm(
-    formula = counts ~ genders + age_groups,
+    formula = Count ~ Gender + Age_group,
     data = analysis_data,
-    family = gaussian(),
+    family = poisson (link = "log"),
     prior = normal(location = 0, scale = 23, autoscale = TRUE),
     prior_intercept = normal(location = 0, scale = 1, autoscale = TRUE),
     prior_aux = exponential(rate = 0.33, autoscale = TRUE),
@@ -56,9 +59,9 @@ prior_summary(third_model)
 
 fourth_model <-
   stan_glm(
-    formula = counts ~ years,
+    formula = Count ~ Year_of_death,
     data = analysis_data,
-    family = gaussian(),
+    family = poisson (link = "log"),
     prior = normal(location = 0, scale = 25, autoscale = TRUE),
     prior_intercept = normal(location = 0, scale = 3, autoscale = TRUE),
     prior_aux = exponential(rate = 1, autoscale = TRUE),
