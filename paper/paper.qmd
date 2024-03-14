@@ -160,21 +160,23 @@ Here we briefly describe the Bayesian analysis model used to investigate... Back
 
 ## Model set-up
 
-Define $y_i$ as the number of seconds that the plane remained aloft. Then $\beta_i$ is the wing width and $\gamma_i$ is the wing length, both measured in millimeters.  
+Define $count_i$ as the count of deaths that resulted from drug toxicity in Toronto. Then $\beta_i$ is the wing width and $\gamma_i$ is the wing length, both measured in millimeters.  
 
-\begin{align} 
-y_i|\mu_i, \sigma &\sim \mbox{Normal}(\mu_i, \sigma) \\
-\mu_i &= \alpha + \beta_i + \gamma_i\\
-\alpha &\sim \mbox{Normal}(0, 2.5) \\
-\beta &\sim \mbox{Normal}(0, 2.5) \\
-\gamma &\sim \mbox{Normal}(0, 2.5) \\
-\sigma &\sim \mbox{Exponential}(1)
+\begin{align}
+\text{Count}_i | \mu_i, \sigma &\sim \text{Normal}(\mu_i, \sigma) \\
+\mu_i &= \alpha + \text{Gender}_i + \text{Age\_group}_i \\
+\alpha &\sim \text{Normal}(0, 2.5) \\
+\text{Gender} &\sim \text{Normal}(0, 2.5) \\
+\text{Age\_group} &\sim \text{Normal}(0, 2.5) \\
+\sigma &\sim \text{Exponential}(1)
 \end{align}
 
 We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
 
 
 ### Model justification
+
+Count Data -> Poisson 
 
 We expect a positive relationship between the size of the wings and time spent aloft. In particular...
 
