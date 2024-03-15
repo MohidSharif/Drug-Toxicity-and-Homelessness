@@ -45,13 +45,13 @@ The remainder of this paper is structured as follows. @sec-data....
 
 # Data {#sec-data}
 
-We obtained our data from the City of Toronto **opendatatoronto** database portal, using the 'opendatatoronto' package [@citeopendatatoronto] and the statistical programming language **R** [@citeR]. I used the **tidyverse** package for data manipulation [@citetidyverse] and **kableExtra** for table formatting [@citekableExtra]. The header includes two lines of code **"usepackage{float}"** which allows the use of float in R markdown and the line **"floatplacement{figure}{H}"** [@citeholdposition] which keeps the tables and figures locked in the specific place where they are written in R markdown.
+We obtained our data from the City of Toronto **opendatatoronto** database portal, using the 'opendatatoronto' package [@citeopendatatoronto] and the statistical programming language **R** [@citeR]. We used the **tidyverse** package for data manipulation [@citetidyverse] and **kableExtra** for table formatting [@citekableExtra]. The header includes two lines of code **"usepackage{float}"** which allow the use of float in R markdown and the line **"floatplacement{figure}{H}"** [@citeholdposition] which keeps the tables and figures locked in the specific place where they are written in R markdown.
 
 This data set records reports of homeless deaths across Toronto and records the details of the deceased. The data records the **year of death, cause of death, age group, gender, and number of deaths** for every report. The data classifies cases by age group rather than specific ages, age groups are grouped by 20 year age gaps (E.g. "20 to 39 Years") except for the first group which is **"<20"** and the last group which is **"60+"**. Gender is identified and reported as **"Male"** or **"Female"**. Year of death is simply as the year the deaths were reported, starting from **2017** up until **2023**. Cause of deaths are classified as follows: **"Accident", "Cancer", "Cardiovascular Disease", "Covid-19", "Drug Toxicity", "Homicide", "Pneumonia", "Other", "Suicide", and "Unknown/Pending"**. And the number of deaths is simply the number of deaths provided in that report.
 
-Since we are only interested in deaths due to drug toxicity, we simplified the data and created two datasets. First the data was cleaned to remove any **"Unknown"** or **empty** values. Then causes of death due to **Drug Toxicity** were isolated and all others were removed from the dataset. We then created two datasets, one highlighting the number deaths per year for each gender and one for the number of deaths per year for each age group. Since case in the data set reported multiple deaths, therefore all counts from each report had to be added to their respective grouping to create a new death count variable for the two datasets. Using these new datasets we can now compare and analyze the death trend oover the years for each gender and age group.
+Since we are only interested in deaths due to drug toxicity, we simplified the data and created two data sets. First the data was cleaned to remove any **"Unknown"** or **empty** values. Then causes of death due to **Drug Toxicity** were isolated and all others were removed from the data set. We then created two data sets, one highlighting the number of deaths per year for each gender and one for the number of deaths per year for each age group. Since each report in the data set can contain multiple deaths, therefore all counts from each report had to be added to their respective grouping to create a new death count variable for the two data sets. Using these new data sets we can now compare and analyze the death trend over the years for each gender and age group.
 
-@tbl-sample1 shows the data associated with cases reported as "death due to drug toxicity".This data shows us year, age group, gender and count of each reported case of drug toxicity.
+@tbl-sample1 shows the data associated with cases reported as "death due to drug toxicity". This data sample shows the number of deaths reported for the years 2017 and 2018 for each age group.
 
 ```{r}
 #| label: tbl-sample1
@@ -80,7 +80,7 @@ age_group_data |>
 
 ```
 
-@tbl-sample2 shows the data associated with cases reported as "death due to drug toxicity".This data shows us year, age group, gender and count of each reported case of drug toxicity.
+@tbl-sample2 shows the data associated with cases reported as "death due to drug toxicity".This data shows us the number of deaths reported for the years 2017-2020 for each gender.
 
 ```{r}
 #| label: tbl-sample2
@@ -102,17 +102,13 @@ gender_data |>
 
 ```
 
-Talk more about it.
+@age-graph visualizes our first data of interest, showing deaths per year for each age group. Looking at this graph teaches us a few things. Firstly, homeless aged 40-59 are the most prone to death due to drug intoxication, followed by age group 20-39. Secondly, deaths by intoxication peaked during the years 2020-2022, these years are when the pandemic was most prevelant. Lastly, there seems to be no improvement in the homeless drug problem over this time period.
 
-
-Talk way more about it. 
 
 ```{r}
-#| label: figure1
+#| label: age-graph
 #| fig-cap: Deaths Per Year for Age Group
 #| echo: false
-#| warning: false
-#| message: false
 
 # Aggregate data to get the total number of deaths for each year and age group
 total_deaths <- cleaned_data %>%
@@ -126,17 +122,14 @@ ggplot(total_deaths, aes(x = factor(Year_of_death), y = Total_Deaths, fill = Age
        y = "Total Number of Deaths") +
   scale_fill_manual(values = c("#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3")) +
   theme_minimal()
-
-
 ```
-
+@gender-graph visualizes our second data set of interest, showing number of deaths for males and females from 2017-2023. We can learn a few more things on top of what @age-graph teaches us. From @gender-graph we can see that men see more deaths due to intoxication than women. We also see a much drastic increase in deaths by drug intoxication for men during the pandemic years compared to women. We also see a large decrease in deaths of women for the year 2023. Overall, we see no improvement in deaths for men, while we only see an improvement for women in the year 2023.
 
 ```{r}
-#| label: figure2
+#| label: gender-graph
 #| fig-cap: Deaths Per Year per Gender
 #| echo: false
-#| warning: false
-#| message: false
+
 # Aggregate data to get the total number of deaths for each year and gender
 total_deaths_gender <- cleaned_data %>%
   group_by(Year_of_death, Gender) %>%
@@ -159,9 +152,9 @@ The goal of our modelling strategy is twofold. Firstly, use a poisson distributi
 I DO NOTKNOW WHAT TO PUT HERE
 Here we briefly describe the Bayesian analysis model used to investigate... Background details and diagnostics are included in [Appendix -@sec-model-details].
 
-## Model set-up
+## Model set-up   
 
-Define $count_i$ as the count of deaths that resulted from drug toxicity in Toronto. Then $\Gender_i$ is the gender for that count of deaths and $\Age\_group_i$ is the range of ages for the deaths.
+Define $count_i$ as the count of deaths that resulted from drug toxicity in Toronto. Then $Gender_i$ is the gender for that count of deaths and $Age group_i$ is the range of ages for the deaths.
 
 \begin{align}
 \text{Count}_i | \mu_i, \sigma &\sim \text{Normal}(\mu_i, \sigma) \\
@@ -238,15 +231,15 @@ modelsummary::modelsummary(
 #| warning: false
 
 
-modelsummary::modelsummary(
-  list(
-    "Gender Only" = fifth_model,
-    "Age Only" = fourth_model,
-    "Age and Gender" = sixth_model
-  ),
-  statistic = "mad",
-  fmt = 2
-)
+#modelsummary::modelsummary(
+#  list(
+#    "Gender Only" = fifth_model,
+#    "Age Only" = fourth_model,
+#    "Age and Gender" = sixth_model
+#  ),
+#  statistic = "mad",
+#  fmt = 2
+#)
 ```
 
 # Discussion
