@@ -34,20 +34,23 @@ library(kableExtra)
 cleaned_data <- read_csv(here::here("data/analysis_data/cleaned_data.csv"))
 ```
 
-
 # Introduction
 
 You can and should cross-reference sections and sub-sections. We use @citeR and @rohan.
 
+For many years, Toronto has struggled with homelessness. Amidst an affordable housing shortage and escalating living expenses, escaping the cycle of homelessness has grown increasingly challenging. Being homeless brings along with it a string of issues - the most obvious ones being lack of food, being caught out in adverse weather and exposure to drugs and other substances.  Often, survivability for part most depends on consumption of numbing drugs, especially in the harsh winter. As a result, overdosing becomes a common risk factor among homeless populations, accentuating the urgency for comprehensive research into drug toxicity dynamics within this demographic. This paper aims to delve into the intricate relationship between drug toxicity and mortality rates among homeless individuals in Toronto, with a focus on how these dynamics vary across different age groups and genders over time. 
+
+It is important to study the effects of drug toxicity among the homeless for several reasons. First, it gives insight into the challenges of homelessness beyond just shelter and sustenance. Moreover, it highlights the shortcomings of local institutions in both aiding the homeless and restricting availability of non-legal drugs. Finally, it provides insights for policy makers to devise targeted intervention to help solve problems on both accounts. 
+
+By examining data over several years, this paper will help identify trends across different demographics in Toronto. It will also illustrate any changes in drug lethality due to the pandemic, which may or may not affect proclivity for drug consumption. This will help draw inference about any disproportionate affects on any demographic, and thereby aid in tackling the problem at hand. 
+
 The remainder of this paper is structured as follows. @sec-data....
-
-
 
 # Data {#sec-data}
 
 We obtained our data from the City of Toronto **opendatatoronto** database portal, using the 'opendatatoronto' package [@citeopendatatoronto] and the statistical programming language **R** [@citeR]. We used the **tidyverse** package for data manipulation [@citetidyverse] and **kableExtra** for table formatting [@citekableExtra]. The header includes two lines of code **"usepackage{float}"** which allow the use of float in R markdown and the line **"floatplacement{figure}{H}"** [@citeholdposition] which keeps the tables and figures locked in the specific place where they are written in R markdown.
 
-This data set records reports of homeless deaths across Toronto and records the details of the deceased. The data records the **year of death, cause of death, age group, gender, and number of deaths** for every report. The data classifies cases by age group rather than specific ages, age groups are grouped by 20 year age gaps (E.g. "20 to 39 Years") except for the first group which is **"<20"** and the last group which is **"60+"**. Gender is identified and reported as **"Male"** or **"Female"**. Year of death is simply as the year the deaths were reported, starting from **2017** up until **2023**. Cause of deaths are classified as follows: **"Accident", "Cancer", "Cardiovascular Disease", "Covid-19", "Drug Toxicity", "Homicide", "Pneumonia", "Other", "Suicide", and "Unknown/Pending"**. And the number of deaths is simply the number of deaths provided in that report.
+This data set records reports of homeless deaths across Toronto and records the details of the deceased. The data records the **year of death, cause of death, age group, gender, and number of deaths** for every report. The data classifies cases by age group rather than specific ages, age groups are grouped by 20 year age gaps (E.g. "20 to 39 Years") except for the first group which is **"\<20"** and the last group which is **"60+"**. Gender is identified and reported as **"Male"** or **"Female"**. Year of death is simply as the year the deaths were reported, starting from **2017** up until **2023**. Cause of deaths are classified as follows: **"Accident", "Cancer", "Cardiovascular Disease", "Covid-19", "Drug Toxicity", "Homicide", "Pneumonia", "Other", "Suicide", and "Unknown/Pending"**. And the number of deaths is simply the number of deaths provided in that report.
 
 Since we are only interested in deaths due to drug toxicity, we simplified the data and created two data sets. First the data was cleaned to remove any **"Unknown"** or **empty** values. Then causes of death due to **Drug Toxicity** were isolated and all others were removed from the data set. We then created two data sets, one highlighting the number of deaths per year for each gender and one for the number of deaths per year for each age group. Since each report in the data set can contain multiple deaths, therefore all counts from each report had to be added to their respective grouping to create a new death count variable for the two data sets. Using these new data sets we can now compare and analyze the death trend over the years for each gender and age group.
 
@@ -104,7 +107,6 @@ gender_data |>
 
 @age-graph visualizes our first data of interest, showing deaths per year for each age group. Looking at this graph teaches us a few things. Firstly, homeless aged 40-59 are the most prone to death due to drug intoxication, followed by age group 20-39. Secondly, deaths by intoxication peaked during the years 2020-2022, these years are when the pandemic was most prevelant. Lastly, there seems to be no improvement in the homeless drug problem over this time period.
 
-
 ```{r}
 #| label: age-graph
 #| fig-cap: Deaths Per Year for Age Group
@@ -123,6 +125,7 @@ ggplot(total_deaths, aes(x = factor(Year_of_death), y = Total_Deaths, fill = Age
   scale_fill_manual(values = c("#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3")) +
   theme_minimal()
 ```
+
 @gender-graph visualizes our second data set of interest, showing number of deaths for males and females from 2017-2023. We can learn a few more things on top of what @age-graph teaches us. From @gender-graph we can see that men see more deaths due to intoxication than women. We also see a much drastic increase in deaths by drug intoxication for men during the pandemic years compared to women. We also see a large decrease in deaths of women for the year 2023. Overall, we see no improvement in deaths for men, while we only see an improvement for women in the year 2023.
 
 ```{r}
@@ -145,17 +148,18 @@ ggplot(total_deaths_gender, aes(x = factor(Year_of_death), y = Total_Deaths, fil
 
 
 ```
+
 # Model
 
 The goal of our modelling strategy is twofold. Firstly, use a poisson distribution and a negative binomial distribution as we have count data.Both distribution can be use on count data, and by using both we are able to compare results. Secondly, use a multilevel or Bayesian model.
 
-I DO NOTKNOW WHAT TO PUT HERE
-Here we briefly describe the Bayesian analysis model used to investigate... Background details and diagnostics are included in [Appendix -@sec-model-details].
+I DO NOTKNOW WHAT TO PUT HERE Here we briefly describe the Bayesian analysis model used to investigate... Background details and diagnostics are included in [Appendix -@sec-model-details].
 
-## Model set-up   
+## Model set-up
 
 Define $count_i$ as the count of deaths that resulted from drug toxicity in Toronto. Then $Gender_i$ is the gender for that count of deaths and $Age group_i$ is the range of ages for the deaths.
 
+```{=tex}
 \begin{align}
 \text{Count}_i | \mu_i, \sigma &\sim \text{Normal}(\mu_i, \sigma) \\
 \mu_i &= \alpha + \text{Gender}_i + \text{Age\_group}_i \\
@@ -164,15 +168,14 @@ Define $count_i$ as the count of deaths that resulted from drug toxicity in Toro
 \text{Age\_group} &\sim \text{Normal}(0, 2.5) \\
 \sigma &\sim \text{Exponential}(1)
 \end{align}
-
+```
 We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
 
-
 ### Model justification
-We expect a their to be a larger relationship between males and the number of deaths. This is because there are more males within the homeless population and more males homeless as a result of addiction to drugs. These reason make it clear that that the male relationship is larger than the female. 
+
+We expect a their to be a larger relationship between males and the number of deaths. This is because there are more males within the homeless population and more males homeless as a result of addiction to drugs. These reason make it clear that that the male relationship is larger than the female.
 
 Secondly, we expect the relationship to be larger between younger individuals and the number of deaths. We expect this result as the older individuals who die when homeless, will die of illness like Covid-19 or cancer. This limits the number of deaths occurring as a result of drugs. This may result in a negative relationship for the older age groups and a positive relationship for the younger age groups.
-
 
 # Results
 
@@ -246,22 +249,24 @@ modelsummary::modelsummary(
 
 ## First discussion point {#sec-first-point}
 
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
+If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this.
 
 ## Second discussion point
 
 ## Third discussion point
 
-## Weaknesses and next steps
+## Limitations
 
-Weaknesses and next steps should also be included.
+The analysis presented in this study is subject to certain limitations, many of which stem from the method of data acquisition itself. The primary concern is sampling bias - according the opendatatoronto portal, only the deaths reported to the Toronto Public Health (TPH) by specific sources are included in the dataset. Consequently, any instances where deaths are not reported to the TPH could potentially underestimate the prevalence of drug related fatalities among the homeless. Furthermore, about 25% of cases from the raw dataset have either an unknown or pending cause of death, reducing the power of our model.The lack of clarity regarding the cause of death introduces uncertainty. 
 
+Furthermore, any death counts for transgender people were withheld due to the extremely small numbers. This decision discounts the impact of drug toxicity on this demographic, and illustrates the difficulty in assessing impacts on this specific subgroup. One can hypothesize that homeless gender-diverse individuals could be polarizingly more or less likely to overdose on drugs, but that can never be verified.  
+
+Finally, the portal reports that the data is updated regularly as new cases are reported and previous cases are updated with new information. This means that every time the dataset is updated our analysis becomes less accurate, and must be re-done after some period of time. While not exactly a shortcoming, it represents the dynamic nature of the data and its need to be revised consistently. 
 \newpage
 
 \appendix
 
-# Appendix {-}
-
+# Appendix {.unnumbered}
 
 # Additional data details
 
@@ -296,7 +301,6 @@ pp_check(first_model) +
 
 @fig-stanareyouokay is a trace and rhat plot. It shows... This suggests...
 
-
 ```{r}
 #| echo: false
 #| eval: true
@@ -312,11 +316,6 @@ plot(first_model, "trace")
 plot(first_model, "rhat")
 ```
 
-
-
 \newpage
 
-
 # References
-
-
