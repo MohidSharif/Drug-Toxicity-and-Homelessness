@@ -157,7 +157,7 @@ I DO NOTKNOW WHAT TO PUT HERE Here we briefly describe the Bayesian analysis mod
 
 ## Model set-up
 
-Define $count_i$ as the count of deaths that resulted from drug toxicity in Toronto. Then $Gender_i$ is the gender for that count of deaths and $Age group_i$ is the range of ages for the deaths.
+Define $count_i$ as the count of deaths that resulted from drug toxicity in Toronto. Then $Gender_i$ is the gender for that count of deaths and $Age group_i$ is the range of ages for the count of deaths deaths.
 
 ```{=tex}
 \begin{align}
