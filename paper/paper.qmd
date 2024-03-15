@@ -210,6 +210,7 @@ sixth_model <-
   readRDS(file = here::here("models/sixth_model.rds"))
 ```
 
+this table is for poisson 
 ```{r}
 #| echo: false
 #| eval: true
@@ -228,6 +229,7 @@ modelsummary::modelsummary(
 )
 ```
 
+This table is for negative binomial model
 ```{r}
 #| echo: false
 #| eval: true
@@ -246,6 +248,9 @@ modelsummary::modelsummary(
 #  fmt = 2
 #)
 ```
+
+can discuss difference in results between them and overall coefficients be care when intrepting coefficients in each model 
+
 
 # Discussion
 
