@@ -52,7 +52,9 @@ We obtained our data from the City of Toronto **opendatatoronto** database porta
 
 This data set records reports of homeless deaths across Toronto and records the details of the deceased. The data records the **year of death, cause of death, age group, gender, and number of deaths** for every report. The data classifies cases by age group rather than specific ages, age groups are grouped by 20 year age gaps (E.g. "20 to 39 Years") except for the first group which is **"\<20"** and the last group which is **"60+"**. Gender is identified and reported as **"Male"** or **"Female"**. Year of death is simply as the year the deaths were reported, starting from **2017** up until **2023**. Cause of deaths are classified as follows: **"Accident", "Cancer", "Cardiovascular Disease", "Covid-19", "Drug Toxicity", "Homicide", "Pneumonia", "Other", "Suicide", and "Unknown/Pending"**. And the number of deaths is simply the number of deaths provided in that report.
 
-Since we are only interested in deaths due to drug toxicity, we simplified the data and created two data sets. First the data was cleaned to remove any **"Unknown"** or **empty** values. Then causes of death due to **Drug Toxicity** were isolated and all others were removed from the data set. We then created two data sets, one highlighting the number of deaths per year for each gender and one for the number of deaths per year for each age group. Since each report in the data set can contain multiple deaths, therefore all counts from each report had to be added to their respective grouping to create a new death count variable for the two data sets. Using these new data sets we can now compare and analyze the death trend over the years for each gender and age group.
+Since we are only interested in deaths due to drug toxicity, we simplified the data and created two other data sets. First the data was cleaned to remove any **"Unknown"** or **empty** values. Then causes of death due to **Drug Toxicity** were isolated and all others were removed from the data set. We then created two data sets, one highlighting the number of deaths per year for each gender and one for the number of deaths per year for each age group. Since each report in the data set can contain multiple deaths, therefore all counts from each report had to be added to their respective grouping to create a new death count variable for the two data sets. Using these new data sets we can now compare and analyze the death trend over the years for each gender and age group.
+
+{{< pagebreak >}}
 
 @tbl-sample1 shows the data associated with cases reported as "death due to drug toxicity". This data sample shows the number of deaths reported for the years 2017 and 2018 for each age group.
 
@@ -65,8 +67,9 @@ Since we are only interested in deaths due to drug toxicity, we simplified the d
 library(knitr)
 
 # Read the data into a variable
-age_group_data <- read_csv(here::here("data/analysis_data/age_group_deaths_data.csv"))
-gender_data <- read_csv(here::here("data/analysis_data/gender_deaths_data.csv"))
+age_group_data <- read_csv(here::here("data/analysis_data/age_group_deaths_data.csv"), show_col_types = FALSE)
+gender_data <- read_csv(here::here("data/analysis_data/gender_deaths_data.csv"), show_col_types = FALSE)
+
 
 # Filter the data to be specific to data relating to drug txocity causes of death
 age_group_data |> 
@@ -83,7 +86,13 @@ age_group_data |>
 
 ```
 
-@tbl-sample2 shows the data associated with cases reported as "death due to drug toxicity".This data shows us the number of deaths reported for the years 2017-2020 for each gender.
+Line one of @tbl-sample1 can be read as follows: In the year 2017 there were no deaths due to intoxication for homeless individuals aged less than 20 years. Similarly we can read the rest of the data set. Just looking at this sample table we can see that ages 20-39 and 40-59 seem to have drastically more deaths due to intoxication compared to the other age groups. We can use this when visualizing our data to determine if our data and graphs match up as expected.
+
+This data was of interest to us because we wanted to study which age groups were most prone to drug intoxication. By isolating age groups we can determine which age group is in need of the most support against the drug problem. We also wanted to observe how the death toll for each age group changed over the course of our 5 year data set. By doing this we can determine why a rise or dip in deaths occurred for that age group in that year.
+
+{{< pagebreak >}}
+
+@tbl-sample2 also shows the data associated with cases reported as "death due to drug toxicity". This data however, shows the number of deaths reported for the years 2017 and 2018 for each gender rather than age group.
 
 ```{r}
 #| label: tbl-sample2
@@ -105,49 +114,12 @@ gender_data |>
 
 ```
 
-@age-graph visualizes our first data of interest, showing deaths per year for each age group. Looking at this graph teaches us a few things. Firstly, homeless aged 40-59 are the most prone to death due to drug intoxication, followed by age group 20-39. Secondly, deaths by intoxication peaked during the years 2020-2022, these years are when the pandemic was most prevelant. Lastly, there seems to be no improvement in the homeless drug problem over this time period.
+Line one of @tbl-sample2 can be read as follows: In the year 2017 there were 26 deaths caused by intoxication for Male homeless individuals. Similarly we can read the rest of the data set. From this table we can observe that the Male homeless population seems to consistently suffer more deaths due to drug intoxication every year. Again we can use this trend to determine if our figures match up as expected with our tables.
 
-```{r}
-#| label: age-graph
-#| fig-cap: Deaths Per Year for Age Group
-#| echo: false
+We choose gender as our second variable of interest to compare the effect of drugs on homeless males and females. Using this approach we can determine which gender population was more in need of support and pair this with our age group data set to further narrow down which demographic was suffering the most. Looking at just @tbl-sample1 and @tbl-sample2 we can already speculate that males between the ages of 30-49 were most prone to drug intoxicated deaths.
 
-# Aggregate data to get the total number of deaths for each year and age group
-total_deaths <- cleaned_data %>%
-  group_by(Year_of_death, Age_group) %>%
-  summarise(Total_Deaths = sum(Count),.groups = "drop")
+Using our two data sets we hope to find ways to improve the living situation of the homeless population. We hope that our findings can help determine what changes need to be made and which homeless demographic should be targeted in efforts to reduce homeless mortality.
 
-# Create a bar graph for the total number of deaths
-ggplot(total_deaths, aes(x = factor(Year_of_death), y = Total_Deaths, fill = Age_group)) +
-  geom_bar(stat = "identity", position = "stack") +
-  labs(x = "Year of Death",
-       y = "Total Number of Deaths") +
-  scale_fill_manual(values = c("#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3")) +
-  theme_minimal()
-```
-
-@gender-graph visualizes our second data set of interest, showing number of deaths for males and females from 2017-2023. We can learn a few more things on top of what @age-graph teaches us. From @gender-graph we can see that men see more deaths due to intoxication than women. We also see a much drastic increase in deaths by drug intoxication for men during the pandemic years compared to women. We also see a large decrease in deaths of women for the year 2023. Overall, we see no improvement in deaths for men, while we only see an improvement for women in the year 2023.
-
-```{r}
-#| label: gender-graph
-#| fig-cap: Deaths Per Year per Gender
-#| echo: false
-
-# Aggregate data to get the total number of deaths for each year and gender
-total_deaths_gender <- cleaned_data %>%
-  group_by(Year_of_death, Gender) %>%
-  summarise(Total_Deaths = sum(Count), .groups = "drop")
-
-# Create a grouped bar graph for male and female
-ggplot(total_deaths_gender, aes(x = factor(Year_of_death), y = Total_Deaths, fill = Gender)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  labs(x = "Year of Death",
-       y = "Total Number of Deaths") +
-  scale_fill_manual(values = c("#66c2a5", "#fc8d62")) +
-  theme_minimal()
-
-
-```
 
 # Model
 
@@ -180,6 +152,59 @@ Secondly, we expect the relationship to be larger between younger individuals an
 Thirdly, we expect changes within years as the death count increased during the pandemic seen in @age-graph. The years pre and post Covid-19 are extremely similar. There was a clear increase during the pandemic but not the topic of this paper, therefor not studied further.
 
 # Results
+
+@age-graph visualizes our first data of interest, showing deaths per year for each age group. Looking at this graph teaches us a few things. Firstly, homeless aged 40-59 are the most prone to death due to drug intoxication, followed by age group 20-39. Secondly, deaths by intoxication peaked during the years 2020-2022, these years are when the pandemic was most prevalent. Lastly, there seems to be no improvement in the homeless drug problem over this time period.
+
+
+```{r}
+#| label: age-graph
+#| fig-cap: Deaths Per Year for Age Group
+#| echo: false
+
+# Aggregate data to get the total number of deaths for each year and age group
+total_deaths <- cleaned_data %>%
+  group_by(Year_of_death, Age_group) %>%
+  summarise(Total_Deaths = sum(Count),.groups = "drop")
+
+# Create a bar graph for the total number of deaths
+ggplot(total_deaths, aes(x = factor(Year_of_death), y = Total_Deaths, fill = Age_group)) +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(x = "Year of Death",
+       y = "Total Number of Deaths") +
+  scale_fill_manual(values = c("#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3")) +
+  theme_minimal()
+```
+
+Observing @age-graph we can see that during the years 2017-2019 there are no significant changes in the death tolls reported for each age group. However, the trend does suggest that the death toll is on a steady incline. Once we reach 2020, we see a significant rise in deaths reported for almost every age group. This increasing trend continues for the next two years until 2023 where it stabilizes to how it was before 2020. From this we can incur that something irregular and unexpected occurred during the years 2020-2022 that caused our death reports to increase drastically, diverging from our regular trend. This becomes evident when we notice that our death reports fall back to our regular trend once we reach 2023.
+
+@age-graph also shows us the trends for each age group. Overall, the death ratio of each age group compared to the total death toll seems to be consistent. Some major observations are as follows: homeless aged 40-59 years of age are the most prone to drug intoxicated death, followed by homeless aged 20-39, and finally individuals <20 years of age being least affected.
+
+@gender-graph visualizes our second data set of interest, showing number of deaths for males and females from 2017-2023. We can learn a few more things on top of what @age-graph teaches us. From @gender-graph we can see that men see more deaths due to intoxication than women. We also see a much drastic increase in deaths by drug intoxication for men during the pandemic years compared to women. We also see a large decrease in deaths of women for the year 2023. Overall, we see no improvement in deaths for men, while we only see an improvement for women in the year 2023.
+
+```{r}
+#| label: gender-graph
+#| fig-cap: Deaths Per Year per Gender
+#| echo: false
+
+# Aggregate data to get the total number of deaths for each year and gender
+total_deaths_gender <- cleaned_data %>%
+  group_by(Year_of_death, Gender) %>%
+  summarise(Total_Deaths = sum(Count), .groups = "drop")
+
+# Create a grouped bar graph for male and female
+ggplot(total_deaths_gender, aes(x = factor(Year_of_death), y = Total_Deaths, fill = Gender)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "Year of Death",
+       y = "Total Number of Deaths") +
+  scale_fill_manual(values = c("#66c2a5", "#fc8d62")) +
+  theme_minimal()
+
+
+```
+
+By observing @gender-graph we can see that male mortality rate is much higher than female mortality due to drug toxicity. We also see that total number of male deaths peaks at a much higher ratio compared to female deaths. From this we can hypothesize that the effects of the pandemic had a greater affect on the male population subect to drug abuse than the female population. We also see that the female population experiences a much lower dip than the male population after the pandemic, surprisingly the lowest count from previous years.
+
+@gender-graph suggests that males occupy a majority of the homeless population as well as being more prone to drug abuse. This observation explains why we see a much greater number of male deaths compared to females. However, this does not explain why the pandemic affected the male population more greatly than the female population, and why did the death count for the female population drop so drastically for the year 2023? Looking at the @age-graph we can see that during 2023, the age group 20-39 saw a greatest dip pin death count. Coupling this with @gender-graph could suggest that a large number of females from the ages 20-39 saw improvements in deaths due to drug toxicity.
 
 Our results are summarized in @tbl-modelresults.
 
