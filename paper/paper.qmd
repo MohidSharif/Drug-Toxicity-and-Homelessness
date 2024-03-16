@@ -126,7 +126,7 @@ Using our two data sets we hope to find ways to improve the living situation of 
 
 The goal of our modelling strategy is twofold. Firstly, we use a poisson distribution as we have count data and generally, it is the first tool we can use when handling count data. Secondly, we use a multilevel or Bayesian model. We use this multilevel model to account for the nested nature of the data. All counts of deaths are nested within a year and then age group and gender. This allows the model to control variance within each nested data point.  
 
-I DO NOTKNOW WHAT TO PUT HERE Here we briefly describe the Bayesian analysis model used to investigate... Background details and diagnostics are included in [Appendix -@sec-model-details].
+We have completed a number of tests on our model which can be viewed in the @sec-model-details. These are vital to ensure our model achieves what is outlined in the paper. 
 
 ## Model set-up
 
