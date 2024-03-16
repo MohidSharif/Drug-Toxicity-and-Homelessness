@@ -7,7 +7,7 @@ author:
 thanks: "Code and data are available at: https://github.com/MohidSharif/Drug-Toxicity-and-Homelessness.."
 date: today
 date-format: long
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+abstract: "In this study, we investigated fatalities due to drug toxicity among the homeless population over the years, examining trends across age and gender. Fatalities increased steadily from 2017 onwards across all ages and genders until 2021, where we observed a sharp spike in deaths of males aged between 20 and 59 years of age, which returned back to expected pre pandemic levels in 2023. The study highlights the neglected state of the homeless in Toronto, which require targeted interventions to bolster their welfare especially during a public health crisis."
 format: pdf
 number-sections: true
 bibliography: references.bib
@@ -35,8 +35,6 @@ cleaned_data <- read_csv(here::here("data/analysis_data/cleaned_data.csv"))
 ```
 
 # Introduction
-
-You can and should cross-reference sections and sub-sections. We use @citeR and @rohan.
 
 For many years, Toronto has struggled with homelessness. Amidst an affordable housing shortage and escalating living expenses, escaping the cycle of homelessness has grown increasingly challenging. Being homeless brings along with it a string of issues - the most obvious ones being lack of food, being caught out in adverse weather and exposure to drugs and other substances.  Often, survivability for part most depends on consumption of numbing drugs, especially in the harsh winter. As a result, overdosing becomes a common risk factor among homeless populations, accentuating the urgency for comprehensive research into drug toxicity dynamics within this demographic. This paper aims to delve into the intricate relationship between drug toxicity and mortality rates among homeless individuals in Toronto, with a focus on how these dynamics vary across different age groups and genders over time. 
 
@@ -120,10 +118,11 @@ We choose gender as our second variable of interest to compare the effect of dru
 
 Using our two data sets we hope to find ways to improve the living situation of the homeless population. We hope that our findings can help determine what changes need to be made and which homeless demographic should be targeted in efforts to reduce homeless mortality.
 
+{{< pagebreak >}}
 
 # Model
 
-The goal of our modelling strategy is twofold. Firstly, we use a poisson distribution and a negative binomial distribution as we have count data.Both distribution can be use on count data, and by using both we are able to compare results. Secondly, we use a multilevel or Bayesian model. We use this multilevel model to account for the nested nature of the data. All counts of deaths are nested within a year and then age group and gender. This always the model to control variance within each nested data point. 
+The goal of our modelling strategy is twofold. Firstly, we use a poisson distribution and a negative binomial distribution as we have count data. Both distribution can be use on count data, and by using both we are able to compare results. Secondly, we use a multilevel or Bayesian model. We use this multilevel model to account for the nested nature of the data. All counts of deaths are nested within a year and then age group and gender. This allows the model to control variance within each nested data point. 
 
 I DO NOTKNOW WHAT TO PUT HERE Here we briefly describe the Bayesian analysis model used to investigate... Background details and diagnostics are included in [Appendix -@sec-model-details].
 
@@ -145,11 +144,11 @@ We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use
 
 ### Model justification
 
-We expect a their to be a larger relationship between males and the number of deaths. This is because there are more males within the homeless population and more males homeless as a result of addiction to drugs. These reason make it clear that that the male relationship is larger than the female.
+We expect their to be a larger relationship between males and the number of deaths. This is because there are more males within the homeless population and more males homeless as a result of addiction to drugs. These reasons make it clear that that the male relationship is larger than the female.
 
 Secondly, we expect the relationship to be larger between younger individuals and the number of deaths. We expect this result as the older individuals who die when homeless, will die of illness like Covid-19 or cancer. This limits the number of deaths occurring as a result of drugs. This may result in a negative relationship for the older age groups and a positive relationship for the younger age groups.
 
-Thirdly, we expect changes within years as the death count increased during the pandemic seen in @age-graph. The years pre and post Covid-19 are extremely similar. There was a clear increase during the pandemic but not the topic of this paper, therefor not studied further.
+Thirdly, we expect changes within years as the death count increased during the pandemic seen in @age-graph. The years pre and post Covid-19 are extremely similar. There was a clear increase during the pandemic but not the topic of this paper, therefore not studied further.
 
 # Results
 
@@ -254,25 +253,6 @@ modelsummary::modelsummary(
 )
 ```
 
-This table is for negative binomial model
-```{r}
-#| echo: false
-#| eval: true
-#| label: tbl-modelresults2
-#| tbl-cap: "Explanatory models of flight time based on wing width and wing length"
-#| warning: false
-
-
-#modelsummary::modelsummary(
-#  list(
-#    "Gender Only" = fifth_model,
-#    "Age Only" = fourth_model,
-#    "Age and Gender" = sixth_model
-#  ),
-#  statistic = "mad",
-#  fmt = 2
-#)
-```
 
 can discuss difference in results between them and overall coefficients be care when intrepting coefficients in each model 
 
