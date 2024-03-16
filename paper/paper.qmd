@@ -285,20 +285,27 @@ Finally, the portal reports that the data is updated regularly as new cases are 
 # Additional data details
 
 # Model details {#sec-model-details}
+## Credibility Interval
+```{r}
 
+plot(
+  third_model,
+  "areas"
+)
+```
 ## Posterior predictive check
 
-In @fig-ppcheckandposteriorvsprior we implement a posterior predictive check. This shows the posterior's distributions ability to simulate the data used to create the model. Ultimately, It is a measure of how good the model is. We can see the models improvement from the only gender, then only age, and our final model utilizing both age and gender is undoubedtly the best fit. 
+In @fig-ppcheck we implement a posterior predictive check. This shows the posterior's distributions ability to simulate the data used to create the model. Ultimately, It is a measure of how good the model is. We can see the models improvement from the only gender, then only age, and our final model utilizing both age and gender is undoubedtly the best fit. 
 
 ```{r}
 #| eval: true
 #| echo: false
 #| message: false
 #| warning: false
-#| label: fig-ppcheckandposteriorvsprior
+#| label: fig-ppcheck
 #| layout-ncol: 2
 #| fig-cap: "Examining how the model fits, and is affected by, the data"
-#| fig-subcap: ["Posterior prediction check", "Comparing the posterior with the prior"]
+#| fig-subcap: ["Posterior prediction check"]
 
 pp_check(first_model) +
   theme_classic() +
@@ -321,7 +328,7 @@ pp_check(third_model) +
 
 ## Diagnostics
 
-@fig-stanareyouokay is a trace and rhat plot. It shows... This suggests...
+@fig-stanareyouokay is a trace and rhat plot. The trace plot is as expected showing large amount of scatter and nothing out of the ordinary. In the rhat plot we want the values as close to 1 as possible which it is clear our model achieves to an extremely high level. 
 
 ```{r}
 #| echo: false
@@ -333,9 +340,9 @@ pp_check(third_model) +
 #| fig-subcap: ["Trace plot", "Rhat plot"]
 #| layout-ncol: 2
 
-plot(first_model, "trace")
+plot(third_model, "trace")
 
-plot(first_model, "rhat")
+plot(third_model, "rhat")
 ```
 
 \newpage
