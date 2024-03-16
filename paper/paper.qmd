@@ -22,7 +22,6 @@ header-includes:
 #| message: false
 
 library(tidyverse)
-library(palmerpenguins)
 library(here)
 library(bayesplot)
 
@@ -51,6 +50,8 @@ The remainder of this paper is structured as follows. @sec-data which discusses 
 We obtained our data from the City of Toronto **opendatatoronto** database portal, using the 'opendatatoronto' package [@citeopendatatoronto] and the statistical programming language **R** [@citeR]. We used the **tidyverse** package for data manipulation [@citetidyverse] and **kableExtra** for table formatting [@citekableExtra]. The header includes two lines of code **"usepackage{float}"** which allow the use of float in R markdown and the line **"floatplacement{figure}{H}"** [@citeholdposition] which keeps the tables and figures locked in the specific place where they are written in R markdown.
 
 This data set records reports of homeless deaths across Toronto and records the details of the deceased. The data records the **year of death, cause of death, age group, gender, and number of deaths** for every report. The data classifies cases by age group rather than specific ages, age groups are grouped by 20 year age gaps (E.g. "20 to 39 Years") except for the first group which is **"\<20"** and the last group which is **"60+"**. Gender is identified and reported as **"Male"** or **"Female"**. Year of death is simply as the year the deaths were reported, starting from **2017** up until **2023**. Cause of deaths are classified as follows: **"Accident", "Cancer", "Cardiovascular Disease", "Covid-19", "Drug Toxicity", "Homicide", "Pneumonia", "Other", "Suicide", and "Unknown/Pending"**. And the number of deaths is simply the number of deaths provided in that report.
+
+## Measurement and Variables of Interest
 
 Since we are only interested in deaths due to drug toxicity, we simplified the data and created two other data sets. First the data was cleaned to remove any **"Unknown"** or **empty** values. Then causes of death due to **Drug Toxicity** were isolated and all others were removed from the data set. We then created two data sets, one highlighting the number of deaths per year for each gender and one for the number of deaths per year for each age group. Since each report in the data set can contain multiple deaths, therefore all counts from each report had to be added to their respective grouping to create a new death count variable for the two data sets. Using these new data sets we can now compare and analyze the death trend over the years for each gender and age group.
 
@@ -92,7 +93,7 @@ This data was of interest to us because we wanted to study which age groups were
 
 {{< pagebreak >}}
 
-@tbl-sample2 also shows the data associated with cases reported as "death due to drug toxicity". This data however, shows the number of deaths reported for the years 2017 and 2018 for each gender rather than age group.
+@tbl-sample2 also shows the data associated with cases reported as "death due to drug toxicity". This data however, shows the number of deaths reported for the years 2017-2020 for each gender rather than age group.
 
 ```{r}
 #| label: tbl-sample2
@@ -130,7 +131,7 @@ We have completed a number of tests on our model which can be viewed in the @sec
 
 ## Model set-up
 
-Define $count_i$ as the count of deaths that resulted from drug toxicity in Toronto. Then $Gender_i$ is the gender for that count of deaths and $Age group_i$ is the range of ages for the count of deaths deaths.
+Define $count_i$ as the count of deaths that resulted from drug toxicity in Toronto. Then $Gender_i$ is the gender for that count of deaths and $Age group_i$ is the range of ages for the count of deaths.
 
 ```{=tex}
 \begin{align*}
@@ -146,7 +147,7 @@ We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use
 
 ### Model justification
 
-We expect their to be a larger relationship between males and the number of deaths. This is because there are more males within the homeless population and more males homeless as a result of addiction to drugs. These reasons make it clear that that the male relationship is larger than the female.
+We expect there to be a larger relationship between males and the number of deaths. This is because there are more males within the homeless population and more males homeless as a result of addiction to drugs. These reasons make it clear that that the male relationship is larger than the female.
 
 Secondly, we expect the relationship to be larger between younger individuals and the number of deaths. We expect this result as the older individuals who die when homeless, will die of illness like Covid-19 or cancer. This limits the number of deaths occurring as a result of drugs. This may result in a negative relationship for the older age groups and a positive relationship for the younger age groups.
 
@@ -154,12 +155,12 @@ Thirdly, we expect changes within years as the death count increased during the 
 
 # Results {#sec-results}
 
-@age-graph visualizes our first data of interest, showing deaths per year for each age group. Looking at this graph teaches us a few things. Firstly, homeless aged 40-59 are the most prone to death due to drug intoxication, followed by age group 20-39. Secondly, deaths by intoxication peaked during the years 2020-2022, these years are when the pandemic was most prevalent. Lastly, there seems to be no improvement in the homeless drug problem over this time period.
+@fig-age-graph visualizes our first data of interest, showing deaths per year for each age group. Looking at this graph teaches us a few things. Firstly, homeless aged 40-59 are the most prone to death due to drug intoxication, followed by age group 20-39. Secondly, deaths by intoxication peaked during the years 2020-2022, these years are when the pandemic was most prevalent. Lastly, there seems to be no improvement in the homeless drug problem over this time period.
 
 
 ```{r}
 #| label: fig-age-graph
-#| fig-cap: Deaths Per Year for Age Group
+#| fig-cap: Deaths Per Year per Age Group
 #| echo: false
 
 # Aggregate data to get the total number of deaths for each year and age group
@@ -205,9 +206,8 @@ ggplot(total_deaths_gender, aes(x = factor(Year_of_death), y = Total_Deaths, fil
 
 By observing @fig-gender-graph we can see that male mortality rate is much higher than female mortality due to drug toxicity. We also see that total number of male deaths peaks at a much higher ratio compared to female deaths. From this we can hypothesize that the effects of the pandemic had a greater affect on the male population subect to drug abuse than the female population. We also see that the female population experiences a much lower dip than the male population after the pandemic, surprisingly the lowest count from previous years.
 
-@fig-gender-graph suggests that males occupy a majority of the homeless population as well as being more prone to drug abuse. This observation explains why we see a much greater number of male deaths compared to females. However, this does not explain why the pandemic affected the male population more greatly than the female population, and why did the death count for the female population drop so drastically for the year 2023? Looking at the @fig-age-graph we can see that during 2023, the age group 20-39 saw a greatest dip pin death count. Coupling this with @fig-gender-graph could suggest that a large number of females from the ages 20-39 saw improvements in deaths due to drug toxicity.
+@fig-gender-graph suggests that males occupy a majority of the homeless population as well as being more prone to drug abuse. This observation explains why we see a much greater number of male deaths compared to females. However, this does not explain why the pandemic affected the male population more greatly than the female population, and why did the death count for the female population drop so drastically for the year 2023? Looking at the @fig-age-graph we can see that during 2023, the age group 20-39 saw the greatest dip in death count. Coupling this with @fig-gender-graph could suggest that a large number of females from the ages 20-39 saw improvements in deaths due to drug toxicity.
 
-Our results are summarized in @tbl-modelresults. We need a paragraph about this table. 
 
 ```{r}
 #| echo: false
@@ -236,13 +236,13 @@ sixth_model <-
   readRDS(file = here::here("models/sixth_model.rds"))
 ```
 
-this table is for poisson 
+@tbl-modelresults shows the coefficients of the predictor variables of the Model. Only the top half of this table is of interest to us, as it provides the values of the coefficient representing the intercept and the coefficient representing the deaths per year of males and each age group and their relationship with Gender Only, Age Only, and Age and Gender. We are also provided the standard error of coefficients in brackets. We can see from this table that the relationship between our 20-39 age group and 40-59 age group with age deaths is much greater than other age groups. We also see the same result when relating it to age and gender. By utilizing this we can estimate deaths for each age group and gender in the coming years due to drug toxicity.
+
 ```{r}
+#| label: tbl-modelresults
+#| tbl-cap: Model summary of the number deaths by gender and each age group
 #| echo: false
 #| eval: true
-#| label: tbl-modelresults
-#| tbl-cap: "Explanatory models of flight time based on wing width and wing length"
-#| warning: false
 
 modelsummary::modelsummary(
   list(
@@ -254,10 +254,6 @@ modelsummary::modelsummary(
   fmt = 2
 )
 ```
-
-
-can discuss difference in results between them and overall coefficients be care when intrepting coefficients in each model 
-
 
 # Discussion {#sec-discussion}
 
