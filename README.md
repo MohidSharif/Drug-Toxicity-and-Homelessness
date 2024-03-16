@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repo provide that data, scripts and qmd files for the paper Homelessness and Drug Toxicity. This study investigated fatalities due to drug toxicity among the homeless population over the years, examining trends across age and gender. The study highlights the neglected state of the homeless in Toronto, which require targeted interventions to bolster their welfare especially during a public health crisis. The data for this repo is from opendatatoronto with the file structure below and available scripts to reproduce this paper and the individual aspects for the paper including the data, scripts, qmd files.  
+This repo provide that data, scripts and qmd files for the paper Homelessness and Drug Toxicity. This study investigated fatalities due to drug toxicity among the homeless population over the years, examining trends across age and gender. The study highlights the neglected state of the homeless in Toronto, which require targeted interventions to bolster their welfare especially during a public health crisis. The data for this repo is from opendatatoronto with the file structure below and available scripts to reproduce this paper and the individual aspects for the paper including the data, scripts, qmd files. We have also simulated the data which is avaiable in the data folder and was generated using the scripts/.00-simulate_data.R file. 
 
 ## How to Use
 To replicate our findings or conduct further analyses:

@@ -36,13 +36,13 @@ cleaned_data <- read_csv(here::here("data/analysis_data/cleaned_data.csv"))
 
 # Introduction
 
-For many years, Toronto has struggled with homelessness. Amidst an affordable housing shortage and escalating living expenses, escaping the cycle of homelessness has grown increasingly challenging. Being homeless brings along with it a string of issues - the most obvious ones being lack of food, being caught out in adverse weather and exposure to drugs and other substances.  Often, survivability for part most depends on consumption of numbing drugs, especially in the harsh winter. As a result, overdosing becomes a common risk factor among homeless populations, accentuating the urgency for comprehensive research into drug toxicity dynamics within this demographic. This paper aims to delve into the intricate relationship between drug toxicity and mortality rates among homeless individuals in Toronto, with a focus on how these dynamics vary across different age groups and genders over time. 
+For many years, Toronto has struggled with homelessness. Amidst an affordable housing shortage and escalating living expenses, escaping the cycle of homelessness has grown increasingly challenging. Being homeless brings along with it a string of issues - the most obvious ones being lack of food, being caught out in adverse weather and exposure to drugs and other substances.  Often, survivability depends on consumption of numbing drugs, especially in the harsh winter. As a result, overdosing becomes a common risk factor among homeless populations, accentuating the urgency for comprehensive research into drug toxicity dynamics within this demographic. This paper aims to delve into the intricate relationship between drug toxicity and mortality rates among homeless individuals in Toronto, with a focus on how these dynamics vary across different age groups and genders over time. 
 
 It is important to study the effects of drug toxicity among the homeless for several reasons. First, it gives insight into the challenges of homelessness beyond just shelter and sustenance. Moreover, it highlights the shortcomings of local institutions in both aiding the homeless and restricting availability of non-legal drugs. Finally, it provides insights for policy makers to devise targeted intervention to help solve problems on both accounts. 
 
 By examining data over several years, this paper will help identify trends across different demographics in Toronto. It will also illustrate any changes in drug lethality due to the pandemic, which may or may not affect proclivity for drug consumption. This will help draw inference about any disproportionate affects on any demographic, and thereby aid in tackling the problem at hand. 
 
-The remainder of this paper is structured as follows. @sec-data....
+The remainder of this paper is structured as follows. @sec-data which discusses the dataset in high detail, @sec-model which outlines the model used for analysis and lastly, @sec-results which explains the results from the model. There is a discussion section @sec-discussion which developes ideas for future studies, the strengths and the weaknesses of this paper.
 
 # Data {#sec-data}
 
@@ -120,7 +120,7 @@ Using our two data sets we hope to find ways to improve the living situation of 
 
 {{< pagebreak >}}
 
-# Model
+# Model {#sec-model}
 
 The goal of our modelling strategy is twofold. Firstly, we use a poisson distribution and a negative binomial distribution as we have count data. Both distribution can be use on count data, and by using both we are able to compare results. Secondly, we use a multilevel or Bayesian model. We use this multilevel model to account for the nested nature of the data. All counts of deaths are nested within a year and then age group and gender. This allows the model to control variance within each nested data point. 
 
@@ -150,7 +150,7 @@ Secondly, we expect the relationship to be larger between younger individuals an
 
 Thirdly, we expect changes within years as the death count increased during the pandemic seen in @age-graph. The years pre and post Covid-19 are extremely similar. There was a clear increase during the pandemic but not the topic of this paper, therefore not studied further.
 
-# Results
+# Results {#sec-results}
 
 @age-graph visualizes our first data of interest, showing deaths per year for each age group. Looking at this graph teaches us a few things. Firstly, homeless aged 40-59 are the most prone to death due to drug intoxication, followed by age group 20-39. Secondly, deaths by intoxication peaked during the years 2020-2022, these years are when the pandemic was most prevalent. Lastly, there seems to be no improvement in the homeless drug problem over this time period.
 
@@ -257,9 +257,9 @@ modelsummary::modelsummary(
 can discuss difference in results between them and overall coefficients be care when intrepting coefficients in each model 
 
 
-# Discussion
+# Discussion {#sec-discussion}
 
-## First discussion point {#sec-first-point}
+## First discussion point 
 
 If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this.
 
