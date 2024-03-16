@@ -257,13 +257,17 @@ modelsummary::modelsummary(
 
 # Discussion {#sec-discussion}
 
-## First discussion point 
+While it is tempting to jump to a discussion of trends, it is worth examining the age distribution of fatalities in isolation every year. As seen in @fig-age-graph, most deaths occur in the 40-59 age group, followed by the 20-39 age group. The two age groups combined have consistently accounted for over 90% of fatalities across all years. 
 
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this.
+This is largely representative of the general age distribution of homeless people. [@homelesshub] suggests that the youth (aged 16-24) accounts for about 11 percent of the homeless population. Furthermore, the modal age of the homeless individual is 40, right in the middle of our two age groups with the highest count. Therefore, it is safe to conclude that the distribution of death by drug toxicity is a direct representation of the age distribution of the homeless themselves, and shows no surprise. 
 
-## Second discussion point
+The trend for drug toxicity shows a  steady incline from 2017 onwards, up until a sharp increase in 2021 for all age groups.  The 20-39 and 40-59 age groups grow considerably, and even the age group <20 becomes visible. This trend seems paradoxical at best - with imposition of lockdowns and other restrictive measures, it should have become more challenging to obtain such substances. Therefore, this trend warrants an explanation. 
 
-## Third discussion point
+One rather obvious explanation has been that the total number of homeless people has increased, while the ability to obtain drugs has stayed constant. This is definitely partly true, with loss of incomes and jobs forcing many individuals to the streets. Statistics Canada [@citerecoveryfromcovid19] reported a 20% decline in employment within the final quarter of 2020, the effects of which would likely be seen in 2021. As incomes evaporated, it was no longer viable to pay Toronto’s extremely high rents [@citecbc] which forced more people onto the streets. Whether the availability of drugs increased is an issue beyond the scope of this paper, and requires an analysis of its own. 
+
+Another possible reason is that in times of heightened stress and anxiety, the homeless increasingly turned to drug like substances as a coping mechanism. Financial hardships, social isolation, and general neglect left the homeless more vulnerable to drug abuse, both prolonging their suffering due to financial cost of addiction as well as leaving them more likely to overdose. Furthermore, the turbulent laws and regulations introduced by the government makes a similar study conducted in France echo this reasoning [@citenih]. 
+
+The distribution and trends by gender also agree with explanations above. Both factors caused more homeless people on the streets, and the homeless population has historically skewed towards men. The only worrisome trend here is the counts for death by drug toxicity increasing sharply only for men. Since it has been observed that historically men have been more prone to substance abuse than women, it is also expected for the fatalities due to drug toxicity to skew male. The most probable explanation for why only the male fatalities increased by so much is that the extra anxiety and stress due to the pandemic coupled with a higher number of males on the streets contributed to higher male mortality during these years. 
 
 ## Limitations
 
@@ -271,7 +275,7 @@ The analysis presented in this study is subject to certain limitations, many of 
 
 Furthermore, any death counts for transgender people were withheld due to the extremely small numbers. This decision discounts the impact of drug toxicity on this demographic, and illustrates the difficulty in assessing impacts on this specific subgroup. One can hypothesize that homeless gender-diverse individuals could be polarizingly more or less likely to overdose on drugs, but that can never be verified.  
 
-Finally, the portal reports that the data is updated regularly as new cases are reported and previous cases are updated with new information. This means that every time the dataset is updated our analysis becomes less accurate, and must be re-done after some period of time. While not exactly a shortcoming, it represents the dynamic nature of the data and its need to be revised consistently. 
+Finally, the portal reports that the data is updated regularly as new cases are reported and previous cases are updated with new information. This means that every time the data set is updated our analysis becomes less accurate, and must be re-done after some period of time. While not exactly a shortcoming, it represents the dynamic nature of the data and its need to be revised consistently. 
 \newpage
 
 \appendix
