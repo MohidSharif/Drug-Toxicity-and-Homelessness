@@ -24,6 +24,8 @@ header-includes:
 library(tidyverse)
 library(palmerpenguins)
 library(here)
+library(bayesplot)
+
 # Turn off echo for all code, disables knitting code chunks
 knitr::opts_chunk$set(echo = TRUE)
 # Turn off warning messaging in knitted paper file
@@ -122,7 +124,7 @@ Using our two data sets we hope to find ways to improve the living situation of 
 
 # Model {#sec-model}
 
-The goal of our modelling strategy is twofold. Firstly, we use a poisson distribution and a negative binomial distribution as we have count data. Both distribution can be use on count data, and by using both we are able to compare results. Secondly, we use a multilevel or Bayesian model. We use this multilevel model to account for the nested nature of the data. All counts of deaths are nested within a year and then age group and gender. This allows the model to control variance within each nested data point. 
+The goal of our modelling strategy is twofold. Firstly, we use a poisson distribution as we have count data and generally, it is the first tool we can use when handling count data. Secondly, we use a multilevel or Bayesian model. We use this multilevel model to account for the nested nature of the data. All counts of deaths are nested within a year and then age group and gender. This allows the model to control variance within each nested data point.  
 
 I DO NOTKNOW WHAT TO PUT HERE Here we briefly describe the Bayesian analysis model used to investigate... Background details and diagnostics are included in [Appendix -@sec-model-details].
 
@@ -131,14 +133,14 @@ I DO NOTKNOW WHAT TO PUT HERE Here we briefly describe the Bayesian analysis mod
 Define $count_i$ as the count of deaths that resulted from drug toxicity in Toronto. Then $Gender_i$ is the gender for that count of deaths and $Age group_i$ is the range of ages for the count of deaths deaths.
 
 ```{=tex}
-\begin{align}
-\text{Count}_i | \mu_i, \sigma &\sim \text{Normal}(\mu_i, \sigma) \\
-\mu_i &= \alpha + \text{Gender}_i + \text{Age\_group}_i \\
+\begin{align*}
+\text{Count}_i | \lambda_i &\sim \text{Poisson}(\lambda_i) \\
+\lambda_i &= \exp(\alpha + \text{Gender}_i + \text{Age\_group}_i) \\
 \alpha &\sim \text{Normal}(0, 2.5) \\
-\text{Gender} &\sim \text{Normal}(0, 2.5) \\
-\text{Age\_group} &\sim \text{Normal}(0, 2.5) \\
-\sigma &\sim \text{Exponential}(1)
-\end{align}
+\text{Gender} &\sim \text{Normal}(0, 1) \\
+\text{Age\_group} &\sim \text{Normal}(0, 2.5)
+\end{align*}
+
 ```
 We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
 
@@ -148,7 +150,7 @@ We expect their to be a larger relationship between males and the number of deat
 
 Secondly, we expect the relationship to be larger between younger individuals and the number of deaths. We expect this result as the older individuals who die when homeless, will die of illness like Covid-19 or cancer. This limits the number of deaths occurring as a result of drugs. This may result in a negative relationship for the older age groups and a positive relationship for the younger age groups.
 
-Thirdly, we expect changes within years as the death count increased during the pandemic seen in @age-graph. The years pre and post Covid-19 are extremely similar. There was a clear increase during the pandemic but not the topic of this paper, therefore not studied further.
+Thirdly, we expect changes within years as the death count increased during the pandemic seen in @fig-age-graph. The years pre and post Covid-19 are extremely similar. There was a clear increase during the pandemic but not the topic of this paper, therefore not studied further.
 
 # Results {#sec-results}
 
@@ -156,7 +158,7 @@ Thirdly, we expect changes within years as the death count increased during the 
 
 
 ```{r}
-#| label: age-graph
+#| label: fig-age-graph
 #| fig-cap: Deaths Per Year for Age Group
 #| echo: false
 
@@ -174,14 +176,14 @@ ggplot(total_deaths, aes(x = factor(Year_of_death), y = Total_Deaths, fill = Age
   theme_minimal()
 ```
 
-Observing @age-graph we can see that during the years 2017-2019 there are no significant changes in the death tolls reported for each age group. However, the trend does suggest that the death toll is on a steady incline. Once we reach 2020, we see a significant rise in deaths reported for almost every age group. This increasing trend continues for the next two years until 2023 where it stabilizes to how it was before 2020. From this we can incur that something irregular and unexpected occurred during the years 2020-2022 that caused our death reports to increase drastically, diverging from our regular trend. This becomes evident when we notice that our death reports fall back to our regular trend once we reach 2023.
+Observing @fig-age-graph we can see that during the years 2017-2019 there are no significant changes in the death tolls reported for each age group. However, the trend does suggest that the death toll is on a steady incline. Once we reach 2020, we see a significant rise in deaths reported for almost every age group. This increasing trend continues for the next two years until 2023 where it stabilizes to how it was before 2020. From this we can incur that something irregular and unexpected occurred during the years 2020-2022 that caused our death reports to increase drastically, diverging from our regular trend. This becomes evident when we notice that our death reports fall back to our regular trend once we reach 2023.
 
-@age-graph also shows us the trends for each age group. Overall, the death ratio of each age group compared to the total death toll seems to be consistent. Some major observations are as follows: homeless aged 40-59 years of age are the most prone to drug intoxicated death, followed by homeless aged 20-39, and finally individuals <20 years of age being least affected.
+@fig-age-graph also shows us the trends for each age group. Overall, the death ratio of each age group compared to the total death toll seems to be consistent. Some major observations are as follows: homeless aged 40-59 years of age are the most prone to drug intoxicated death, followed by homeless aged 20-39, and finally individuals <20 years of age being least affected.
 
-@gender-graph visualizes our second data set of interest, showing number of deaths for males and females from 2017-2023. We can learn a few more things on top of what @age-graph teaches us. From @gender-graph we can see that men see more deaths due to intoxication than women. We also see a much drastic increase in deaths by drug intoxication for men during the pandemic years compared to women. We also see a large decrease in deaths of women for the year 2023. Overall, we see no improvement in deaths for men, while we only see an improvement for women in the year 2023.
+@fig-gender-graph visualizes our second data set of interest, showing number of deaths for males and females from 2017-2023. We can learn a few more things on top of what @fig-age-graph teaches us. From @fig-gender-graph we can see that men see more deaths due to intoxication than women. We also see a much drastic increase in deaths by drug intoxication for men during the pandemic years compared to women. We also see a large decrease in deaths of women for the year 2023. Overall, we see no improvement in deaths for men, while we only see an improvement for women in the year 2023.
 
 ```{r}
-#| label: gender-graph
+#| label: fig-gender-graph
 #| fig-cap: Deaths Per Year per Gender
 #| echo: false
 
@@ -201,11 +203,11 @@ ggplot(total_deaths_gender, aes(x = factor(Year_of_death), y = Total_Deaths, fil
 
 ```
 
-By observing @gender-graph we can see that male mortality rate is much higher than female mortality due to drug toxicity. We also see that total number of male deaths peaks at a much higher ratio compared to female deaths. From this we can hypothesize that the effects of the pandemic had a greater affect on the male population subect to drug abuse than the female population. We also see that the female population experiences a much lower dip than the male population after the pandemic, surprisingly the lowest count from previous years.
+By observing @fig-gender-graph we can see that male mortality rate is much higher than female mortality due to drug toxicity. We also see that total number of male deaths peaks at a much higher ratio compared to female deaths. From this we can hypothesize that the effects of the pandemic had a greater affect on the male population subect to drug abuse than the female population. We also see that the female population experiences a much lower dip than the male population after the pandemic, surprisingly the lowest count from previous years.
 
-@gender-graph suggests that males occupy a majority of the homeless population as well as being more prone to drug abuse. This observation explains why we see a much greater number of male deaths compared to females. However, this does not explain why the pandemic affected the male population more greatly than the female population, and why did the death count for the female population drop so drastically for the year 2023? Looking at the @age-graph we can see that during 2023, the age group 20-39 saw a greatest dip pin death count. Coupling this with @gender-graph could suggest that a large number of females from the ages 20-39 saw improvements in deaths due to drug toxicity.
+@fig-gender-graph suggests that males occupy a majority of the homeless population as well as being more prone to drug abuse. This observation explains why we see a much greater number of male deaths compared to females. However, this does not explain why the pandemic affected the male population more greatly than the female population, and why did the death count for the female population drop so drastically for the year 2023? Looking at the @fig-age-graph we can see that during 2023, the age group 20-39 saw a greatest dip pin death count. Coupling this with @fig-gender-graph could suggest that a large number of females from the ages 20-39 saw improvements in deaths due to drug toxicity.
 
-Our results are summarized in @tbl-modelresults.
+Our results are summarized in @tbl-modelresults. We need a paragraph about this table. 
 
 ```{r}
 #| echo: false
@@ -286,7 +288,7 @@ Finally, the portal reports that the data is updated regularly as new cases are 
 
 ## Posterior predictive check
 
-In @fig-ppcheckandposteriorvsprior we implement a posterior predictive check. This shows...
+In @fig-ppcheckandposteriorvsprior we implement a posterior predictive check. This shows the posterior's distributions ability to simulate the data used to create the model. Ultimately, It is a measure of how good the model is. We can see the models improvement from the only gender, then only age, and our final model utilizing both age and gender is undoubedtly the best fit. 
 
 ```{r}
 #| eval: true
@@ -302,9 +304,17 @@ pp_check(first_model) +
   theme_classic() +
   theme(legend.position = "bottom")
 
+pp_check(second_model) +
+  theme_classic() +
+  theme(legend.position = "bottom")
+
+pp_check(third_model) +
+  theme_classic() +
+  theme(legend.position = "bottom")
+
 #posterior_vs_prior(first_model) +
 #  theme_minimal() +
-#  scale_color_brewer(palette = "Set1") +
+# scale_color_brewer(palette = "Set1") +
 #  theme(legend.position = "bottom") +
 #  coord_flip()
 ```
